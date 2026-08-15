@@ -1,0 +1,55 @@
+# bsod.conf —— 蓝屏外观配置示例
+#
+# 把本文件复制到以下任一位置即可生效（无需重启程序）：
+#   /etc/bsod.conf                   # 全局
+#   ~/.config/bsod/bsod.conf         # 当前用户（XDG_CONFIG_HOME 已设置时用其下的 bsod/bsod.conf）
+#
+# 命令行选项优先于配置文件：sudo bsod --show "test" --bg 000000
+#
+# 颜色格式：#RRGGBB / 0xRRGGBB / RRGGBB（注意不含 alpha 通道）
+# 布尔值：true/false、1/0、yes/no、on/off
+# 注释行以 # 或 ; 开头。
+
+# ---------- 颜色（对应 CustomBSOD 的 CR / CC 命令） ----------
+# 屏幕背景颜色，默认经典 Win10 蓝 #0078D7
+# background = 0078D7
+
+# 前景/文字颜色，默认白色
+# foreground = FFFFFF
+
+# 文字背景色：非零且与背景不同时，会在现代模式文字后绘制一个色块
+# （对应 Windows 版「文字背景」）。默认等于背景 = 不绘制。
+# text_bg = 000000
+
+# ---------- 终止代码（对应 CustomBSOD 的 SP 命令） ----------
+# 自定义 Stop Code 文本；现代模式显示为「Stop code: X」，
+# 经典模式显示为「*** STOP: X」。不设置时用 --show 的原因串。
+# stop_code = CUSTOM_STOP_CODE
+
+# ---------- 彩虹蓝屏（对应 CustomBSOD 的 RD / R7 命令） ----------
+# rainbow = false
+# 色相变化速度（度/秒），默认 100
+# rainbow_speed = 100
+
+# ---------- 经典 Windows 7 VGA 文本模式（对应 CustomBSOD 的 VGA 模式） ----------
+# 开启后渲染 80x25/80x50 老式字符蓝屏（正文为经典英文，仅终止代码可自定义）
+# vga = false
+# vga_cols = 80
+# vga_rows = 25        # 仅支持 25 或 50
+# vga_blink = false    # 开启后自定义终止代码行闪烁
+
+# ---------- 自定义显示字符串（对应 CustomBSOD 的 DS 命令） ----------
+# [strings] 段内，每行 `标识 = text|x|y|size|color` 是一个字符串条目：
+#   text   字符串内容（UTF-8）
+#   x,y    现代模式：1920x1080 设计画布像素坐标；经典模式：列、行（单元格）
+#   size   现代模式：字号（像素）；经典模式：忽略
+#   color  文字颜色，可省略（省略时用前景色）
+#
+# 示例（现代模式）：
+# [strings]
+# hello = Hello Linux!|290|900|48|FFFFFF
+# warning = 警告：内核即将重启|600|950|32|FFD700
+#
+# 示例（经典模式，x=列 y=行）：
+# [strings]
+# banner = Custom Text|0|45|0|FFFFFF
