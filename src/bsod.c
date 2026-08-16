@@ -388,6 +388,8 @@ static void animate_modern(font_ctx *fc, render_ctx *r, drm_bsod_ctx *drm,
     {
         const int fpn = RAINBOW_FRAMES_PER_NODE;
         const useconds_t frame_us = (10000000 / n) / fpn;
+        const int tw = font_text_width(fc, i18n_tr(MSG_RENDER_PERCENT_100), fs);
+        const int th = font_line_height(fc, fs);
         int f;
         double hue = 0.0;
 
@@ -399,6 +401,8 @@ static void animate_modern(font_ctx *fc, render_ctx *r, drm_bsod_ctx *drm,
 
                 render_clear(r, bg);
                 bsod_render_modern(fc, r, sw, sh, reason, t, bg, t->fg, 0);
+                /* bsod_render_modern 已在进度处画 "0%"，先清掉该区域再画当前百分比，避免重叠 */
+                render_fill_rect(r, tx, ty, tw, th, bg);
                 snprintf(buf, sizeof(buf), i18n_tr(MSG_RENDER_PERCENT), nodes[i]);
                 font_draw_text(fc, r, tx, ty, buf, t->fg, fs);
                 drm_flip(drm);
