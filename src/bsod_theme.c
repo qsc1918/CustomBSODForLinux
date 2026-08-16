@@ -16,6 +16,7 @@ void bsod_theme_default(struct bsod_theme *t)
     t->bg = DEFAULT_BG;
     t->fg = DEFAULT_FG;
     t->text_bg = DEFAULT_BG; /* 默认与背景相同 => 不在文字后绘制色块 */
+    t->text_bg_set = false;  /* 未显式设置时 text_bg 跟随 bg */
     t->rainbow_speed = DEFAULT_RAINBOW_SPEED;
     t->classic_cols = 80;
     t->classic_rows = 25;
@@ -178,6 +179,8 @@ int bsod_theme_load_file(struct bsod_theme *t, const char *path)
             {
                 if (bsod_parse_color(val, &t->bg) != 0)
                     fprintf(stderr, "[theme] %s:%d 无效颜色: %s\n", path, line_no, val);
+                else if (!t->text_bg_set)
+                    t->text_bg = t->bg; /* 未显式设 text_bg 时跟随背景，避免文字后出现旧默认色块 */
             }
             else if (strcasecmp(key, "foreground") == 0 || strcasecmp(key, "fg") == 0)
             {
@@ -189,6 +192,8 @@ int bsod_theme_load_file(struct bsod_theme *t, const char *path)
             {
                 if (bsod_parse_color(val, &t->text_bg) != 0)
                     fprintf(stderr, "[theme] %s:%d 无效颜色: %s\n", path, line_no, val);
+                else
+                    t->text_bg_set = true;
             }
             else if (strcasecmp(key, "stop_code") == 0)
             {
@@ -256,6 +261,8 @@ int bsod_theme_parse_arg(struct bsod_theme *t, int argc, char **argv, int *i)
         val = argv[++(*i)];
         if (bsod_parse_color(val, &t->bg) != 0)
             return -1;
+        if (!t->text_bg_set)
+            t->text_bg = t->bg; /* 未显式设 text_bg 时跟随背景，避免文字后出现旧默认色块 */
         return 1;
     }
     if (strcmp(arg, "--fg") == 0 || strcmp(arg, "--foreground") == 0)
@@ -274,6 +281,7 @@ int bsod_theme_parse_arg(struct bsod_theme *t, int argc, char **argv, int *i)
         val = argv[++(*i)];
         if (bsod_parse_color(val, &t->text_bg) != 0)
             return -1;
+        t->text_bg_set = true;
         return 1;
     }
     if (strcmp(arg, "--stop") == 0 || strcmp(arg, "--stop-code") == 0)

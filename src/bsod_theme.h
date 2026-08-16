@@ -44,7 +44,8 @@ struct bsod_theme
 {
     uint32_t bg;     /*!< 屏幕背景颜色 0x00RRGGBB */
     uint32_t fg;     /*!< 前景/文字颜色 0x00RRGGBB */
-    uint32_t text_bg; /*!< 文字背景色（现代模式：在文字后绘制色块；默认 = bg 即不绘制） */
+    uint32_t text_bg;  /*!< 文字背景色（现代模式：在文字后绘制色块；默认跟随 bg 即不绘制） */
+    bool text_bg_set;  /*!< 是否显式设置过 text_bg（否则 text_bg 跟随 bg，避免出现旧默认色块） */
 
     char stop_code[BSOD_STOP_CODE_MAX]; /*!< 自定义终止代码文本 */
     bool custom_stop_code;              /*!< 是否启用自定义终止代码 */
